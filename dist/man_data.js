@@ -1,4 +1,5 @@
 const mysql = require('mysql2')
+const init_question = require('./question')
 
 
 const db = mysql.createConnection(
@@ -39,4 +40,19 @@ const view_employees = () => {
         console.table(roles) 
     })
 }
-module.exports = {view_departments, view_role, view_employees}
+
+const add_department_db = (name_department) =>{
+    db.query('SELECT name FROM departments_db', (err, names) =>{
+        for (e of names){
+            if(e.name = name_department){
+                console.log('Esse departamento ja existe')
+                init_question()
+            }
+        }
+    })
+    console.log('adicionado')
+    // Adicionar department
+    // a mensagem para por o nome do departamento esta repetida, porem esta verificando se o nome ja existe
+} 
+
+module.exports = {view_departments, view_role, view_employees, add_department_db}
