@@ -22,4 +22,21 @@ const view_departments = () => {
     })
 }
 
-module.exports = view_departments
+const view_role = () => {
+    db.query('SELECT title, salary, department_id FROM roles_db', (err, roles) =>{
+       if(err){
+           console.log(err)
+       }
+        console.table(roles) 
+    })
+}
+
+const view_employees = () => {
+    db.query('SELECT * FROM employees_db', (err, roles) =>{
+       if(err){
+           console.log(err)
+       }
+        console.table(roles) 
+    })
+}
+module.exports = {view_departments, view_role, view_employees}

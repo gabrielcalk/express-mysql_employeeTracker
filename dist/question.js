@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
 
-const view_departments = require('./man_data')
+const {view_departments, view_role, view_employees} = require('./man_data')
 
 const options_first = ([
     {
@@ -15,8 +15,8 @@ function init_question(){
     inquirer.prompt(options_first).then(response =>{
 
         response.options_chosen == 'View All Departments' ? view_departments()//function to view department
-        : response.options_chosen == 'View All Roles' ? console.log('_')//function to view roles
-        : response.options_chosen == 'View All Employees' ? console.log('_')//function to view employees
+        : response.options_chosen == 'View All Roles' ? view_role()//function to view roles
+        : response.options_chosen == 'View All Employees' ? view_employees()//function to view employees
         : response.options_chosen == 'Add a Department' ? console.log('_')//function to add a department
         : response.options_chosen == 'Add a Role' ? console.log('_')//function to add a role
         : response.options_chosen == 'Add an Employee' ? console.log('_')//function to view employee
