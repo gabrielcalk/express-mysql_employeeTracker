@@ -1,7 +1,6 @@
 const mysql = require('mysql2')
 const init_question = require('./question')
 
-
 const db = mysql.createConnection(
     {
       host: 'localhost',
@@ -14,6 +13,9 @@ const db = mysql.createConnection(
     console.log(`Connected to the movies_db database.`)
   );
 
+/**
+ * @function view_departments - from departments_db
+ */
 const view_departments = () => {
     db.query('SELECT name FROM departments_db', (err, departments) =>{
        if(err){
@@ -23,6 +25,9 @@ const view_departments = () => {
     })
 }
 
+/**
+ * @function view_role - from roles_db
+ */
 const view_role = () => {
     db.query('SELECT title, salary, department_id FROM roles_db', (err, roles) =>{
        if(err){
@@ -32,6 +37,9 @@ const view_role = () => {
     })
 }
 
+/**
+ * @function view_employees - from employees_db
+ */
 const view_employees = () => {
     db.query('SELECT * FROM employees_db', (err, roles) =>{
        if(err){
@@ -41,6 +49,10 @@ const view_employees = () => {
     })
 }
 
+/**
+ * @function add_department_db
+ * @property name (department)
+ */
 const add_department_db = (name_department) =>{
     var name_department = name_department
 
@@ -61,4 +73,12 @@ const add_department_db = (name_department) =>{
     })
 } 
 
-module.exports = {view_departments, view_role, view_employees, add_department_db}
+/**
+ * @function add_department_db
+ * @property name, salary, department of the role
+ */
+const add_role_db = (role_informations) =>{
+    console.log(role_informations)
+}
+
+module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db}
