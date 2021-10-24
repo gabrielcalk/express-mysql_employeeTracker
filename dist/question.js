@@ -41,4 +41,4 @@ function init_question(){
 
 init_question();
 
-module.exports = init_question()
+module.exports = init_question

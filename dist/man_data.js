@@ -42,17 +42,23 @@ const view_employees = () => {
 }
 
 const add_department_db = (name_department) =>{
-    db.query('SELECT name FROM departments_db', (err, names) =>{
-        for (e of names){
-            if(e.name = name_department){
-                console.log('Esse departamento ja existe')
-                init_question()
-            }
+    var name_department = name_department
+
+    db.query('SELECT name FROM departments_db', (err, names_dep) =>{
+    let index_text = names_dep.findIndex(names_dep => names_dep.name == name_department);
+    
+        if (index_text >= 0){
+            console.log('This Department Already Exist')
+        } else{
+            db.query(`INSERT INTO departments_db (name) VALUES (?)`, [name_department], (err, results) =>{
+                if (err){
+                    console.log(err)
+                } else{
+                    console.log(`Added ${name_department} To The Database`)
+                }
+            })
         }
     })
-    console.log('adicionado')
-    // Adicionar department
-    // a mensagem para por o nome do departamento esta repetida, porem esta verificando se o nome ja existe
 } 
 
 module.exports = {view_departments, view_role, view_employees, add_department_db}
