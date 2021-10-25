@@ -5,7 +5,7 @@ const inquirer = require('inquirer')
  */
 
 
-const {view_departments, view_role, view_employees, add_department_db, add_role_db} = require('./man_data')
+const {db, view_departments, view_role, view_employees, add_department_db, add_role_db} = require('./man_data')
 
 /** 
  * Firsts Questions - with options 
@@ -46,11 +46,6 @@ const add_role_questions = ([
         type: 'input',
         message: 'Enter The Salary: ',
         name: 'salary'
-    },
-    {
-        type: 'input',
-        message: 'What is The Department of This Role: ',
-        name: 'department_role'
     }
 ])
 
@@ -65,8 +60,25 @@ function add_department(){
 }
 
 function add_role(){
-    inquirer.prompt(add_role_questions).then(response =>{
-        add_role_db(response)
+    inquirer.prompt(add_role_questions).then(nameAndSalary =>{
+
+        db.query('SELECT name FROM departments_db', (err, depart_name) =>{
+            department_array = []
+
+            for (e of depart_name){
+                department_array.push(e.name)
+            }
+            
+            inquirer.prompt([{
+                type: 'list',
+                message: 'What is The Department of This Role: ',
+                name:  'department_name',
+                choices: department_array
+            }]).then(department =>{
+                add_role_db(nameAndSalary, department)
+            })
+            // add_role_db(response)
+         })
     })
 }
 

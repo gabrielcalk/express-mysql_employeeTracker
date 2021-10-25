@@ -1,5 +1,4 @@
 const mysql = require('mysql2')
-const init_question = require('./question')
 
 const db = mysql.createConnection(
     {
@@ -77,8 +76,8 @@ const add_department_db = (name_department) =>{
  * @function add_department_db
  * @property name, salary, department of the role
  */
-const add_role_db = (role_informations) =>{
-    console.log(role_informations)
+const add_role_db = (nameAndSalary, department) =>{
+    console.log(nameAndSalary, department)
 }
 
-module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db}
+module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db, db}
