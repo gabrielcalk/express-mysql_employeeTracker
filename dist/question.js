@@ -49,6 +49,19 @@ const add_role_questions = ([
     }
 ])
 
+const add_employee_questions = ([
+    {
+        type: 'input',
+        message: 'Enter The First Name of The Employee: ',
+        name: 'fname'
+    },
+    {
+        type: 'input',
+        message: 'Enter Last Name of the Employee ',
+        name: 'lname'
+    }
+])
+
 /**
  * @function add_department - to add a new department
  */
@@ -82,6 +95,31 @@ function add_role(){
     })
 }
 
+function add_employee(){
+    inquirer.prompt(add_employee_questions).then(names =>{
+
+        db.query('SELECT title FROM roles_db', (err, title) =>{
+            title_array = []
+
+            for (e of title){
+                title.push(e.name)
+            }
+            console.log(title)
+            console.log(title_array)
+            
+            // inquirer.prompt([{
+            //     type: 'list',
+            //     message: 'What is The Department of This Role: ',
+            //     name:  'department_name',
+            //     choices: department_array
+            // }]).then(department =>{
+            //     add_role_db(nameAndSalary, department)
+            // })
+            // add_role_db(response)
+         })
+    })
+}
+
 /**
  * @function init_question - questions that will prompt first
  */
@@ -93,7 +131,7 @@ function init_question(){
         : response.options_chosen == 'View All Employees' ? view_employees()//function to view employees
         : response.options_chosen == 'Add a Department' ? add_department()//function to add a department
         : response.options_chosen == 'Add a Role' ? add_role()//function to add a role
-        : response.options_chosen == 'Add an Employee' ? console.log('_')//function to view employee
+        : response.options_chosen == 'Add an Employee' ? add_employee()//function to view employee
         : console.log('_')// function to update an employee role
     })
 }
