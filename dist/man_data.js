@@ -73,11 +73,20 @@ const add_department_db = (name_department) =>{
 } 
 
 /**
- * @function add_department_db
- * @property name, salary, department of the role
+ * @function add_role_db
+ * @property nameAndSalary.role_name / nameAndSalary.salary / department_results
  */
 const add_role_db = (nameAndSalary, department) =>{
-    console.log(nameAndSalary, department)
+    db.query(`SELECT * FROM departments_db WHERE name='${department.department_name}'`, (err, department_results) =>{
+        console.log(department_results[0].id)
+        db.query(`INSERT INTO roles_db (title, salary, department_id) VALUES (?, ?, ?)`, [nameAndSalary.role_name, nameAndSalary.salary, department_results[0].id], (err, results) =>{
+            if(err){
+                console.log(err)
+            } else{
+                console.log(`Added New Role!`)
+            }
+        })
+    })
 }
 
 module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db, db}
