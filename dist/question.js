@@ -5,7 +5,7 @@ const inquirer = require('inquirer')
  */
 
 
-const {db, view_departments, view_role, view_employees, add_department_db, add_role_db} = require('./man_data')
+const {db, view_departments, view_role, view_employees, add_department_db, add_role_db, add_employee_db} = require('./man_data')
 
 /** 
  * Firsts Questions - with options 
@@ -90,7 +90,6 @@ function add_role(){
             }]).then(department =>{
                 add_role_db(nameAndSalary, department)
             })
-            // add_role_db(response)
          })
     })
 }
@@ -98,24 +97,29 @@ function add_role(){
 function add_employee(){
     inquirer.prompt(add_employee_questions).then(names =>{
 
-        db.query('SELECT title FROM roles_db', (err, title) =>{
+        db.query('SELECT title FROM roles_db', (err, title_roles) =>{
             title_array = []
 
-            for (e of title){
-                title.push(e.name)
+            for (e of title_roles){
+                title_array.push(e.title)
             }
-            console.log(title)
-            console.log(title_array)
             
-            // inquirer.prompt([{
-            //     type: 'list',
-            //     message: 'What is The Department of This Role: ',
-            //     name:  'department_name',
-            //     choices: department_array
-            // }]).then(department =>{
-            //     add_role_db(nameAndSalary, department)
-            // })
-            // add_role_db(response)
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    message: 'What is his/her role?',
+                    name:  'role_name',
+                    choices: title_array
+                },
+                {
+                    type: 'list',
+                    message: 'Is he/her a manager?',
+                    name:  'manager',
+                    choices: ['Yes', 'No']
+                }
+            ]).then(response_manAndRole =>{
+                add_employee_db(names, response_manAndRole)
+            })
          })
     })
 }

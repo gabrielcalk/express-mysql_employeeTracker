@@ -89,4 +89,28 @@ const add_role_db = (nameAndSalary, department) =>{
     })
 }
 
-module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db, db}
+/**
+ * @function add_employee_db
+ * @property fname, lname, role and manager(boolean)
+ */
+const add_employee_db = (names, response_manAndRole) =>{
+    db.query(`SELECT * FROM roles_db WHERE title='${response_manAndRole.role_name}'`, (err, department_results) =>{
+        var manager_boolean
+
+        if(response_manAndRole.manager == 'Yes'){
+            manager_boolean = 1
+        } else{
+            manager_boolean = 0
+        }
+
+        db.query(`INSERT INTO employees_db (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [names.fname, names.lname, department_results[0].id, manager_boolean], (err, results) =>{
+            if(err){
+                console.log(err)
+            } else{
+                console.log(`Added New Employee!`)
+            }
+        })
+    })
+}
+
+module.exports = {view_departments, view_role, view_employees, add_department_db, add_role_db, add_employee_db, db}
