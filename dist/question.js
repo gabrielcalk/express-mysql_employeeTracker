@@ -4,6 +4,7 @@ const inquirer = require('inquirer')
  * @function from man_data.js (to do what the user wants)
  */
 const {db,
+    view_all,
      view_departments, 
      view_role, 
      view_employees, 
@@ -21,7 +22,7 @@ const options_first = ([
     {
         type: 'list',
         message: 'Select One Option Below: ',
-        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Delete One Role', 'Add an Employee', 'Delete One Employee', 'Update an Employee Role'],
+        choices: ['View All Departments, Roles and Employees', 'View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Delete One Role', 'Add an Employee', 'Delete One Employee', 'Update an Employee Role'],
         name: 'options_chosen'
     },
 ])
@@ -222,7 +223,8 @@ function update_employee_role(){
  */
 function init_question(){
     inquirer.prompt(options_first).then(response =>{
-        response.options_chosen == 'View All Departments' ? view_departments() //function to view department
+        response.options_chosen == 'View All Departments, Roles and Employees'? view_all()
+        : response.options_chosen == 'View All Departments' ? view_departments() //function to view department
         : response.options_chosen == 'View All Roles' ? view_role() //function to view roles
         : response.options_chosen == 'View All Employees' ? view_employees() //function to view employees
         : response.options_chosen == 'Add a Department' ? add_department() //function to add a department

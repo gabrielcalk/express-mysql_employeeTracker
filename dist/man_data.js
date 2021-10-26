@@ -11,7 +11,14 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the movies_db database.`)
   );
-
+/**
+ * @function view_all - view all the employees, roles and departments
+ */
+const view_all = () =>{
+    db.query('SELECT * from departments_db INNER JOIN roles_db ON departments_db.id = roles_db.department_id INNER JOIN employees_db ON roles_db.id = employees_db.role_id', (err, results) =>{
+        console.table(results)
+    })
+}
 /**
  * @function view_departments - from departments_db
  */
@@ -198,7 +205,8 @@ const delete_employee_db = (delete_employee_name) => {
 }
 
 //Exporting all the functions
-module.exports = {view_departments, 
+module.exports = {view_all,
+                view_departments, 
                 view_role, 
                 view_employees, 
                 add_department_db, 
