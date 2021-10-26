@@ -5,7 +5,14 @@ const inquirer = require('inquirer')
  */
 
 
-const {db, view_departments, view_role, view_employees, add_department_db, add_role_db, add_employee_db} = require('./man_data')
+const {db,
+     view_departments, 
+     view_role, 
+     view_employees, 
+     add_department_db, 
+     add_role_db, 
+     add_employee_db, 
+     update_employee_db} = require('./man_data')
 
 /** 
  * Firsts Questions - with options 
@@ -62,6 +69,7 @@ const add_employee_questions = ([
     }
 ])
 
+
 /**
  * @function add_department - to add a new department
  */
@@ -96,14 +104,11 @@ function add_role(){
 
 function add_employee(){
     inquirer.prompt(add_employee_questions).then(names =>{
-
         db.query('SELECT title FROM roles_db', (err, title_roles) =>{
             title_array = []
-
             for (e of title_roles){
                 title_array.push(e.title)
             }
-            
             inquirer.prompt([
                 {
                     type: 'list',
@@ -124,19 +129,52 @@ function add_employee(){
     })
 }
 
+function update_employee_role(){
+    db.query('SELECT first_name, last_name FROM employees_db', (err, employees_name) =>{
+        employees_array = []
+
+        for (e of employees_name){
+            employees_array.push(`${e.first_name} ${e.last_name}`)
+        }
+
+        db.query('SELECT title FROM roles_db', (err, title_roles) =>{
+            title_array = []
+            for (e of title_roles){
+                title_array.push(e.title)
+            }
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    message: 'Select the employee that you want to update:',
+                    name:  'update_employee',
+                    choices: employees_array
+                },
+                {
+                    type: 'list',
+                    message: 'What is his/her role?',
+                    name:  'role_name',
+                    choices: title_array
+                },
+            ]).then(response =>{
+                update_employee_db(response.update_employee, response.role_name)
+            })
+        })
+    })
+}
+
 /**
  * @function init_question - questions that will prompt first
  */
 function init_question(){
     inquirer.prompt(options_first).then(response =>{
-
         response.options_chosen == 'View All Departments' ? view_departments()//function to view department
         : response.options_chosen == 'View All Roles' ? view_role()//function to view roles
         : response.options_chosen == 'View All Employees' ? view_employees()//function to view employees
         : response.options_chosen == 'Add a Department' ? add_department()//function to add a department
         : response.options_chosen == 'Add a Role' ? add_role()//function to add a role
         : response.options_chosen == 'Add an Employee' ? add_employee()//function to view employee
-        : console.log('_')// function to update an employee role
+        : update_employee_role()// function to update an employee role
     })
 }
 
