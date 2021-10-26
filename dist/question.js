@@ -10,9 +10,11 @@ const {db,
      view_role, 
      view_employees, 
      add_department_db, 
-     add_role_db, 
+     add_role_db,
+     delete_role_db,
      add_employee_db, 
-     update_employee_db} = require('./man_data')
+     update_employee_db,
+     delete_employee_db} = require('./man_data')
 
 /** 
  * Firsts Questions - with options 
@@ -21,7 +23,7 @@ const options_first = ([
     {
         type: 'list',
         message: 'Select One Option Below: ',
-        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role'],
+        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Delete One Role', 'Add an Employee', 'Delete One Employee', 'Update an Employee Role'],
         name: 'options_chosen'
     },
 ])
@@ -102,6 +104,26 @@ function add_role(){
     })
 }
 
+function delete_role(){
+    db.query('SELECT title FROM roles_db', (err, titles) =>{
+        titles_array = []
+
+        for (e of titles){
+            titles_array.push(e.title)
+        }
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Which Role Do You Want to Delete?',
+                name:  'delete_role',
+                choices: titles_array
+            },
+        ]).then(response =>{
+            delete_role_db(response.delete_role)
+        })
+    })
+}
+
 function add_employee(){
     inquirer.prompt(add_employee_questions).then(names =>{
         db.query('SELECT title FROM roles_db', (err, title_roles) =>{
@@ -126,6 +148,26 @@ function add_employee(){
                 add_employee_db(names, response_manAndRole)
             })
          })
+    })
+}
+
+function delete_employee(){
+    db.query('SELECT first_name, last_name FROM employees_db', (err, employees_name) =>{
+        employees_array = []
+
+        for (e of employees_name){
+            employees_array.push(`${e.first_name} ${e.last_name}`)
+        }
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Which Employee Do You Want to Delete?',
+                name:  'delete_employee',
+                choices: employees_array
+            },
+        ]).then(response =>{
+            delete_employee_db(response.delete_employee)
+        })
     })
 }
 
@@ -168,13 +210,15 @@ function update_employee_role(){
  */
 function init_question(){
     inquirer.prompt(options_first).then(response =>{
-        response.options_chosen == 'View All Departments' ? view_departments()//function to view department
-        : response.options_chosen == 'View All Roles' ? view_role()//function to view roles
-        : response.options_chosen == 'View All Employees' ? view_employees()//function to view employees
-        : response.options_chosen == 'Add a Department' ? add_department()//function to add a department
-        : response.options_chosen == 'Add a Role' ? add_role()//function to add a role
-        : response.options_chosen == 'Add an Employee' ? add_employee()//function to view employee
-        : update_employee_role()// function to update an employee role
+        response.options_chosen == 'View All Departments' ? view_departments() //function to view department
+        : response.options_chosen == 'View All Roles' ? view_role() //function to view roles
+        : response.options_chosen == 'View All Employees' ? view_employees() //function to view employees
+        : response.options_chosen == 'Add a Department' ? add_department() //function to add a department
+        : response.options_chosen == 'Add a Role' ? add_role() //function to add a role
+        : response.options_chosen == 'Delete One Role' ? delete_role() //function to delete one role
+        : response.options_chosen == 'Add an Employee' ? add_employee() //function to view employee
+        : response.options_chosen == 'Delete One Employee' ? delete_employee() //function to delete one employee
+        : update_employee_role() //function to update an employee role
     })
 }
 
