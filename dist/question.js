@@ -3,8 +3,6 @@ const inquirer = require('inquirer')
 /**
  * @function from man_data.js (to do what the user wants)
  */
-
-
 const {db,
      view_departments, 
      view_role, 
@@ -58,6 +56,7 @@ const add_role_questions = ([
     }
 ])
 
+// Employee questions: to add one employee
 const add_employee_questions = ([
     {
         type: 'input',
@@ -81,36 +80,39 @@ function add_department(){
         add_department_db(name_department)
     })
 }
-
+/**
+ * @function add_role
+ */
 function add_role(){
     inquirer.prompt(add_role_questions).then(nameAndSalary =>{
-
         db.query('SELECT name FROM departments_db', (err, depart_name) =>{
             department_array = []
-
             for (e of depart_name){
                 department_array.push(e.name)
             }
-            
+            // Asking what department this role belongs
             inquirer.prompt([{
                 type: 'list',
                 message: 'What is The Department of This Role: ',
                 name:  'department_name',
                 choices: department_array
+            // Passing the answer to one function on man_data.js
             }]).then(department =>{
                 add_role_db(nameAndSalary, department)
             })
          })
     })
 }
-
+/**
+ * @function delete_role
+ */
 function delete_role(){
     db.query('SELECT title FROM roles_db', (err, titles) =>{
         titles_array = []
-
         for (e of titles){
             titles_array.push(e.title)
         }
+        //Questions that we need to make to delete one role
         inquirer.prompt([
             {
                 type: 'list',
@@ -118,12 +120,15 @@ function delete_role(){
                 name:  'delete_role',
                 choices: titles_array
             },
+        //Passing the role that the user want to delete to another function one man_data.js
         ]).then(response =>{
             delete_role_db(response.delete_role)
         })
     })
 }
-
+/**
+ * @function add_employee
+ */
 function add_employee(){
     inquirer.prompt(add_employee_questions).then(names =>{
         db.query('SELECT title FROM roles_db', (err, title_roles) =>{
@@ -131,6 +136,7 @@ function add_employee(){
             for (e of title_roles){
                 title_array.push(e.title)
             }
+            //Question that we need to add one employee
             inquirer.prompt([
                 {
                     type: 'list',
@@ -144,20 +150,23 @@ function add_employee(){
                     name:  'manager',
                     choices: ['Yes', 'No']
                 }
+            //Passing the answers to one function on man_data.js
             ]).then(response_manAndRole =>{
                 add_employee_db(names, response_manAndRole)
             })
          })
     })
 }
-
+/**
+ * @function delete_employee
+ */
 function delete_employee(){
     db.query('SELECT first_name, last_name FROM employees_db', (err, employees_name) =>{
         employees_array = []
-
         for (e of employees_name){
             employees_array.push(`${e.first_name} ${e.last_name}`)
         }
+        // Questions that we need to delete employee information
         inquirer.prompt([
             {
                 type: 'list',
@@ -165,26 +174,28 @@ function delete_employee(){
                 name:  'delete_employee',
                 choices: employees_array
             },
+        // Passing the answer to other function (man_data.js)
         ]).then(response =>{
             delete_employee_db(response.delete_employee)
         })
     })
 }
 
+/**
+ * @function update_employee_role
+ */
 function update_employee_role(){
     db.query('SELECT first_name, last_name FROM employees_db', (err, employees_name) =>{
         employees_array = []
-
         for (e of employees_name){
             employees_array.push(`${e.first_name} ${e.last_name}`)
         }
-
         db.query('SELECT title FROM roles_db', (err, title_roles) =>{
             title_array = []
             for (e of title_roles){
                 title_array.push(e.title)
             }
-
+            // Question the we need to update the employe role
             inquirer.prompt([
                 {
                     type: 'list',
@@ -198,6 +209,7 @@ function update_employee_role(){
                     name:  'role_name',
                     choices: title_array
                 },
+            // Passing the answer to other function (man_data.js)
             ]).then(response =>{
                 update_employee_db(response.update_employee, response.role_name)
             })
@@ -221,6 +233,5 @@ function init_question(){
         : update_employee_role() //function to update an employee role
     })
 }
-
 init_question();
 

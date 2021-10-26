@@ -1,13 +1,17 @@
 DROP DATABASE IF EXISTS employee_tracker;
+
+-- Creating employee_tracker database
 CREATE DATABASE employee_tracker;
 
 USE employee_tracker;
 
+-- departments_db table
 CREATE TABLE departments_db(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30) NOT NULL
 );
 
+-- Roles_db table
 CREATE TABLE roles_db(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
@@ -17,6 +21,7 @@ CREATE TABLE roles_db(
     REFERENCES departments_db(id)
 );
 
+-- Employees_db table
 DROP TABLE employees_db
 CREATE TABLE employees_db(
     id INT NOT NULL AUTO_INCREMENT,
@@ -27,7 +32,6 @@ CREATE TABLE employees_db(
     FOREIGN KEY (role_id)
     REFERENCES roles_db(id),
     primary key (id, manager_id)
-    -- composite primary key
 );
 
 
