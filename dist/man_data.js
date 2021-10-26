@@ -83,7 +83,7 @@ const add_role_db = (nameAndSalary, department) =>{
             if(err){
                 console.log(err)
             } else{
-                console.log(`Added New Role!`)
+                console.log(`Added New Role: ${nameAndSalary.role_name}!`)
             }
         })
     })
@@ -107,31 +107,22 @@ const add_employee_db = (names, response_manAndRole) =>{
             if(err){
                 console.log(err)
             } else{
-                console.log(`Added New Employee!`)
+                console.log(`Added New Employee: ${names.fname} ${names.lname}!`)
             }
         })
     })
 }
 
 const update_employee_db = (employee, role) =>{
-    console.log(employee, role)
-    // db.query(`SELECT * FROM roles_db WHERE title='${response_manAndRole.role_name}'`, (err, department_results) =>{
-    //     var manager_boolean
+    var split_name = employee.split(' ')
 
-    //     if(response_manAndRole.manager == 'Yes'){
-    //         manager_boolean = 1
-    //     } else{
-    //         manager_boolean = 0
-    //     }
-
-    //     db.query(`INSERT INTO employees_db (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [names.fname, names.lname, department_results[0].id, manager_boolean], (err, results) =>{
-    //         if(err){
-    //             console.log(err)
-    //         } else{
-    //             console.log(`Added New Employee!`)
-    //         }
-    //     })
-    // })
+    db.query(`SELECT * FROM employees_db WHERE first_name='${split_name[0]}'`, (err, employee_info) =>{
+        db.query(`SELECT * FROM roles_db WHERE title='${role}'`, (err, role_info) =>{
+            db.query(`UPDATE employees_db SET role_id = ? WHERE id = ?`, [role_info[0].id, employee_info[0].id], (err, results) =>{
+                console.log(`${employee} role is Updated!`)
+            })
+        })
+    })
 }
 
 module.exports = {view_departments, 
